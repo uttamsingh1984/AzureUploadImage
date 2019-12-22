@@ -1,0 +1,59 @@
+﻿@page
+@using Microsoft.WindowsAzure.Storage.Blob;
+@model AzureUploadImage.Pages.UploadImageModel
+@{
+    ViewData["Title"] = "Upload Image";
+
+    var imgList = ViewData["ImgList"] != null ? (List<IListBlobItem>)ViewData["ImgList"] : new List<IListBlobItem>();
+}
+
+<h1>Demo: Upload Image in Azure Blob Storage and Bind storage url in the page.</h1>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-1">
+            <label class="col-form-label">Image</label>
+        </div>
+        <div class="col-8">
+            <input type="file" name="imageFile" id="imageFile" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1">
+            <button type="submit">Submit</button>
+        </div>
+    </div>
+</form>
+<br /><br />
+
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        @for (int i = 0; i < imgList.Count(); i++)
+        {
+
+            <li data-target="#carouselExampleIndicators" data-slide-to="@i" class="@(i==0 ? "active":"")"></li>
+
+        }
+    </ol>
+    <div class="carousel-inner">
+        @for (int i = 0; i < imgList.Count(); i++)
+        {
+            IListBlobItem imgPath = imgList[i];
+            if (imgPath.GetType() == typeof(CloudBlockBlob))
+            {
+                <div class="carousel-item @( i==0 ? "active":"") ">
+                    <img class="d-block w-100" src="@imgPath.Uri.AbsoluteUri" height="400" width="400" alt="First slide">
+                </div>
+            }
+
+        }
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
