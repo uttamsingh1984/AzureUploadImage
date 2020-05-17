@@ -56,14 +56,14 @@ namespace AzureUploadImage.Pages
             await containerRef.CreateIfNotExistsAsync();
             await containerRef.SetPermissionsAsync(new BlobContainerPermissions() { PublicAccess = BlobContainerPublicAccessType.Blob });
             CloudBlockBlob blob = containerRef.GetBlockBlobReference(blobName);
-            await blob.UploadFromFileAsync(imageFile.FileName);
-            //using (Stream stream= imageFile.OpenReadStream())
-            //{
-            //    //MemoryStream memoryStream = new MemoryStream();
-            //    //await memoryStream.WriteAsync(image.ToByteArray(), 0, image.ToByteArray().Count());
-            //    await blob.UploadFromStreamAsync(stream);
-            //}
-           
+            //await blob.UploadFromFileAsync(imageFile.FileName);
+            using (Stream stream = imageFile.OpenReadStream())
+            {
+                //MemoryStream memoryStream = new MemoryStream();
+                //await memoryStream.WriteAsync(image.ToByteArray(), 0, image.ToByteArray().Count());
+                await blob.UploadFromStreamAsync(stream);
+            }
+
             return new RedirectToPageResult("UploadImage");
 
         }
